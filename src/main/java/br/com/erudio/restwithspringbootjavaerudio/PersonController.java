@@ -1,57 +1,53 @@
 package br.com.erudio.restwithspringbootjavaerudio;
 
-import br.com.erudio.restwithspringbootjavaerudio.Utils.Converter;
-import br.com.erudio.restwithspringbootjavaerudio.exception.UnsupportedException;
+import br.com.erudio.restwithspringbootjavaerudio.model.Person;
+import br.com.erudio.restwithspringbootjavaerudio.service.PersonService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.List;
 
 @RestController
-public class MathController {
+@RequestMapping("/person")
+public class PersonController {
 	
-	Converter converter;
-	private static final String ERROR = "Please set a numect value";  // Compliant
+	@Autowired
+	private PersonService service;
 	
-	@GetMapping(value = "/sum/{number1}/{number2}")
-	public Double sum(@PathVariable(value = "number1") String number1, @PathVariable(value = "number2") String number2) {
-		if(!converter.isNumeric(number1) || !converter.isNumeric(number2)) {
-			throw new UnsupportedException(ERROR);
-		}
-		return converter.convertToDouble(number1) + converter.convertToDouble(number2);
+	@RequestMapping(value = "/{id}")
+	public Person findPerson(@PathVariable(value = "id") String id) throws Exception {
+		
+		return service.findPersonById(id);
+		
 	}
 	
-	@GetMapping(value = "/minus/{number1}/{number2}")
-	public Double minus(@PathVariable(value = "number1") String number1, @PathVariable(value = "number2") String number2) {
-		if(!converter.isNumeric(number1) || !converter.isNumeric(number2)) {
-			throw new UnsupportedException(ERROR);
-		}
-		return converter. convertToDouble(number1) - converter. convertToDouble(number2);
+	@GetMapping()
+	public List<Person> findAll() {
+		
+		return service.findAll();
+		
 	}
 	
-	@GetMapping(value = "/mult/{number1}/{number2}")
-	public Double mult(@PathVariable(value = "number1") String number1, @PathVariable(value = "number2") String number2) {
-		if(!converter.isNumeric(number1) || !converter.isNumeric(number2)) {
-			throw new UnsupportedException(ERROR);
-		}
-		return converter. convertToDouble(number1) * converter. convertToDouble(number2);
+	@PostMapping()
+	public Person createPerson(@RequestBody Person person) throws Exception {
+		
+		return service.createPerson(person);
+		
 	}
 	
-	@GetMapping(value = "/media/{number1}/{number2}")
-	public Double media(@PathVariable(value = "number1") String number1, @PathVariable(value = "number2") String number2){
-		if(!converter.isNumeric(number1) || !converter.isNumeric(number2)) {
-			throw new UnsupportedException(ERROR);
-		}
-		return converter. convertToDouble(number1) / converter. convertToDouble(number2);
+	
+	@PutMapping()
+	public Person UpdatePerson(@RequestBody Person person) throws Exception {
+		
+		return service.updatePerson(person);
+		
 	}
 	
-	@GetMapping(value = "/squareRoot/{number1}/{number2}")
-	public Double squareRoot(@PathVariable(value = "number1") String number1){
-		if(!converter.isNumeric(number1)) {
-			throw new UnsupportedException(ERROR);
-		}
-		return Math.sqrt(converter.convertToDouble(number1)
-		);
+	@DeleteMapping(value = "/{id}")
+	public void delete(@PathVariable(value = "id") String id) throws Exception {
+		
+		service.deletePerson(id);
+		
 	}
-	
 	
 }
